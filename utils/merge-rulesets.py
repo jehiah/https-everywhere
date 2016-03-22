@@ -61,6 +61,12 @@ def clean_up(rulefile):
     rulefile = re.sub(r">\s*<", r"><", rulefile)
     rulefile = re.sub(r"</ruleset>\s*", r"</ruleset>\n", rulefile)
     rulefile = re.sub(r"\s*(/>|<ruleset)", r"\1", rulefile)
+    rulefile = rulefile.replace("<target", "\n\t<target")
+    rulefile = rulefile.replace("<rule ", "\n\t<rule ")
+    rulefile = rulefile.replace("<exclusion ", "\n\t<exclusion ")
+    rulefile = rulefile.replace("<test ", "\n\t<test ")
+    rulefile = rulefile.replace("<securecookie ", "\n\t<securecookie ")
+    rulefile = rulefile.replace("</ruleset>", "\n</ruleset>")
     return rulefile
 
 library = open(rulesets_fn,"w")
@@ -76,6 +82,8 @@ except:
 print("Removing whitespaces and comments...")
 
 for rfile in sorted(xml_ruleset_files):
+  if 'Bitly' in rfile:
+      continue
   ruleset = open(rfile).read()
   fn = os.path.basename(rfile)
   ruleset = ruleset.replace("<ruleset", '<ruleset f="%s"' % fn, 1)
